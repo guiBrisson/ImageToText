@@ -1,5 +1,8 @@
 package me.brisson.imgtotext.ui.screen.main
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +32,7 @@ import me.brisson.imgtotext.ui.theme.ImageToTextTheme
 fun MainRoute(
     modifier: Modifier = Modifier,
     onCameraScan: () -> Unit,
-    onImageScan: () -> Unit,
+    onImageScan: (Uri) -> Unit,
 ) {
     MainScreen(modifier = modifier, onCameraScan = onCameraScan, onImageScan = onImageScan)
 }
@@ -39,8 +42,13 @@ fun MainRoute(
 internal fun MainScreen(
     modifier: Modifier = Modifier,
     onCameraScan: () -> Unit,
-    onImageScan: () -> Unit,
+    onImageScan: (Uri) -> Unit,
 ) {
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri -> uri?.let { onImageScan(it) } }
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(title = {
@@ -96,7 +104,7 @@ internal fun MainScreen(
                 }
                 MainButton(
                     backgroundColor = Color.Unspecified,
-                    onClick = { onImageScan() },
+                    onClick = { launcher.launch("image/") },
                 ) {
                     MainButtonItem(
                         icon = {
