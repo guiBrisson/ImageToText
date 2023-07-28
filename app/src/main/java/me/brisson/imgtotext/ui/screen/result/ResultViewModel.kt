@@ -1,4 +1,4 @@
-package me.brisson.imgtotext.ui.screen.main
+package me.brisson.imgtotext.ui.screen.result
 
 import android.content.Context
 import android.net.Uri
@@ -16,9 +16,9 @@ import me.brisson.imgtotext.textdetector.TextRecognition
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(): ViewModel() {
-    private val _uiState = MutableStateFlow(MainUiState())
-    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
+class ResultViewModel @Inject constructor(): ViewModel() {
+    private val _uiState = MutableStateFlow(ResultUiState())
+    val uiState: StateFlow<ResultUiState> = _uiState.asStateFlow()
 
     fun analyzeImage(context: Context, uri: Uri) {
         _uiState.update { it.copy(loadingBlocks = true) }

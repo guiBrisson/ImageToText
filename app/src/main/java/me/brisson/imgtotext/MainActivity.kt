@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
-import me.brisson.imgtotext.ui.screen.main.MainRoute
+import me.brisson.imgtotext.ui.screen.result.ResultRoute
 import me.brisson.imgtotext.ui.theme.ImageToTextTheme
 
 @AndroidEntryPoint
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImageToTextTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                   MainRoute()
+                   ResultRoute()
                 }
             }
         }

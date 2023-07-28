@@ -1,6 +1,6 @@
-package me.brisson.imgtotext.ui.screen.main
+package me.brisson.imgtotext.ui.screen.result
 
-data class MainUiState(
+data class ResultUiState(
     val blocks: List<String>? = null,
     val loadingBlocks: Boolean = false,
 )

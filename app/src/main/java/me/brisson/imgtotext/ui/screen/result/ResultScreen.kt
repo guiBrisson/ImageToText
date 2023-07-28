@@ -1,4 +1,4 @@
-package me.brisson.imgtotext.ui.screen.main
+package me.brisson.imgtotext.ui.screen.result
 
 import android.content.Context
 import android.net.Uri
@@ -25,13 +25,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import me.brisson.imgtotext.ui.theme.ImageToTextTheme
 
 @Composable
-fun MainRoute(
+fun ResultRoute(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = hiltViewModel(),
+    viewModel: ResultViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    MainScreen(
+    ResultScreen(
         modifier = modifier,
         uiState = uiState,
         onLauncherResult = viewModel::analyzeImage,
@@ -40,9 +40,9 @@ fun MainRoute(
 }
 
 @Composable
-internal fun MainScreen(
+internal fun ResultScreen(
     modifier: Modifier = Modifier,
-    uiState: MainUiState,
+    uiState: ResultUiState,
     onLauncherResult: (Context, Uri) -> Unit,
 ) {
     val context = LocalContext.current
@@ -80,10 +80,10 @@ internal fun MainScreen(
 
 @Preview(showBackground = true, wallpaper = Wallpapers.RED_DOMINATED_EXAMPLE)
 @Composable
-private fun PreviewMainScreen() {
+private fun PreviewResultScreen() {
     ImageToTextTheme {
         val list = listOf("oi", "tudo bem?")
-        val uiState = MainUiState(blocks = list)
-        MainScreen(uiState = uiState, onLauncherResult = { _, _ -> })
+        val uiState = ResultUiState(blocks = list)
+        ResultScreen(uiState = uiState, onLauncherResult = { _, _ -> })
     }
 }
