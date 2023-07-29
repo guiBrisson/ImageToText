@@ -1,13 +1,11 @@
 package me.brisson.imgtotext.ui.screen.result
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CopyAll
@@ -20,6 +18,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
@@ -56,6 +57,11 @@ internal fun ResultScreen(
     onBack: () -> Unit,
 ) {
     val clipboardManager = LocalClipboardManager.current
+    var text by remember { mutableStateOf("") }
+
+    uiState.blocks?.let {
+        text = it.joinToString(separator = "\n")
+    }
 
     Scaffold(
         topBar = {
@@ -70,11 +76,7 @@ internal fun ResultScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = {
-                    val allBlocksAsString =
-                        AnnotatedString(uiState.blocks?.joinToString(separator = "\n") ?: "")
-                    clipboardManager.setText(allBlocksAsString)
-                }
+                onClick = { clipboardManager.setText(AnnotatedString(text)) }
             ) {
                 Icon(
                     modifier = Modifier.size(20.dp),
@@ -92,20 +94,12 @@ internal fun ResultScreen(
                 .fillMaxSize()
                 .padding(horizontal = 24.dp),
         ) {
-            uiState.blocks?.let { blocks ->
-                itemsIndexed(blocks) { i, text ->
-                    SelectionContainer {
-                        val padding = if (i == blocks.lastIndex) {
-                            PaddingValues(top = 4.dp, bottom = 100.dp)
-                        } else {
-                            PaddingValues(vertical = 4.dp)
-                        }
-
-                        Text(modifier = Modifier.padding(padding), text = text)
-                    }
-                }
+            item {
+                BasicTextField(
+                    value = text,
+                    onValueChange = { text = it }
+                )
             }
-
         }
     }
 }
