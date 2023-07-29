@@ -92,6 +92,9 @@ dependencies {
     // Text features
     implementation("com.google.mlkit:text-recognition:16.0.0")
 
+    // Icons extended
+    implementation("androidx.compose.material:material-icons-extended:1.4.3")
+
     // Test dependencies
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

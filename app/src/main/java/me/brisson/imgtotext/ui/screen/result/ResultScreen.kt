@@ -1,14 +1,19 @@
 package me.brisson.imgtotext.ui.screen.result
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CopyAll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -16,9 +21,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import me.brisson.imgtotext.ui.theme.ImageToTextTheme
@@ -46,6 +55,8 @@ internal fun ResultScreen(
     uiState: ResultUiState,
     onBack: () -> Unit,
 ) {
+    val clipboardManager = LocalClipboardManager.current
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -56,6 +67,23 @@ internal fun ResultScreen(
                     }
                 },
             )
+        },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = {
+                    val allBlocksAsString =
+                        AnnotatedString(uiState.blocks?.joinToString(separator = "\n") ?: "")
+                    clipboardManager.setText(allBlocksAsString)
+                }
+            ) {
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    imageVector = Icons.Default.CopyAll,
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+                Text(text = "Copiar tudo", fontSize = 16.sp, fontWeight = FontWeight.Medium)
+            }
         }
     ) { paddingValues ->
         LazyColumn(
@@ -65,9 +93,15 @@ internal fun ResultScreen(
                 .padding(horizontal = 24.dp),
         ) {
             uiState.blocks?.let { blocks ->
-                items(blocks) { text ->
+                itemsIndexed(blocks) { i, text ->
                     SelectionContainer {
-                        Text(modifier = Modifier.padding(vertical = 4.dp), text = text)
+                        val padding = if (i == blocks.lastIndex) {
+                            PaddingValues(top = 4.dp, bottom = 100.dp)
+                        } else {
+                            PaddingValues(vertical = 4.dp)
+                        }
+
+                        Text(modifier = Modifier.padding(padding), text = text)
                     }
                 }
             }
@@ -76,7 +110,7 @@ internal fun ResultScreen(
     }
 }
 
-@Preview(showBackground = true, wallpaper = Wallpapers.RED_DOMINATED_EXAMPLE)
+@Preview(showBackground = true, wallpaper = Wallpapers.NONE)
 @Composable
 private fun PreviewResultScreen() {
     ImageToTextTheme {
